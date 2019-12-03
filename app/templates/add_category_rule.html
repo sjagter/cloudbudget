@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <h1>Category Rules</h1>
+    <h1>Create Rule</h1>
+    <div class="row">
+        <div class="col-md-4">
+            {{ wtf.quick_form(form) }}
+        </div>
+    </div>
+    <h1>Delete Rule</h1>
+    <div class="row">
+        <div class="col-md-4">
+            {{ wtf.quick_form(remove_category_form) }}
+        </div>
+    </div>
+    <h1>Existing Rules</h1>
+    <div class="row">
+        <div class="col-md-12">
+            {{ table.to_html(classes=['table', 'table-striped', 'table-hover', 'table-responsive'], index=False) | safe }}
+        </div>
+    </div>
+{% endblock %}

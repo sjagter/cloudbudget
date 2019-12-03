@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <head>
+        <script src="https://cdn.pydata.org/bokeh/release/bokeh-1.4.0.min.js"></script>
+        <script src="https://cdn.pydata.org/bokeh/release/bokeh-widgets-1.4.0.min.js"></script>     
+    </head>
+    <h1>Hi, {{ current_user.username }}!</h1>
+    <div class="row">
+        {{ script|safe }}
+        {{ div|safe }}
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            {{ wtf.quick_form(form) }}
+        </div>
+    </div>
+    <h2>Uncategorised Transactions</h2>
+    <div><p>{{ table.to_html(classes=['table', 'table-striped', 'table-hover', 'table-responsive'], index=False) | safe }}</b></p></div>
+{% endblock %}
