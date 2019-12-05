@@ -14,12 +14,12 @@ from bokeh.models import ColumnDataSource, DataRange1d, CheckboxGroup, CustomJS,
 from bokeh.palettes import d3
 
 
-def make_plot(source, title):
-    plot = figure(x_axis_type="datetime", plot_height=400, plot_width=800, tools="", toolbar_location=None)
-    plot.title.text = title
+def make_plot(source):
+    plot = figure(x_axis_type="datetime", plot_height=600, plot_width=1000, tools="", toolbar_location=None)
+    plot.title.text = "Montly Spend"
 
     plot.quad(top='top', bottom='bottom', left='left', right='right',
-              color='colour', source=source, legend_label="NetSpend")
+              fill_color='colour', line_color='black', source=source)
 
     hover = HoverTool(tooltips=[('Category', '@category'),
                                 ('Month', '@MonthBegin{%Y-%m}'),
@@ -130,7 +130,7 @@ def index():
     df_filtered.loc[df_filtered['category']!=category] = np.nan
     source_filtered = ColumnDataSource(data=df_filtered)
 
-    plot = make_plot(source_filtered, "Data for " + category)
+    plot = make_plot(source_filtered)
 
     callback = CustomJS(args=dict(source=source, source_filtered=source_filtered), code="""
         var chosen_idxs = cb_obj.active;
@@ -151,10 +151,9 @@ def index():
                         category_bottom[i] = {}
                     }
                     category_bottom[i][source.data['MonthBegin'][j].toString()] = JSON.parse(JSON.stringify(month_sum[source.data['MonthBegin'][j].toString()]));
-                    month_sum[source.data['MonthBegin'][j].toString()] += source.data['NetSpend'][j];
+                    month_sum[source.data['MonthBegin'][j].toString()] += Math.abs(source.data['NetSpend'][j]);
                 }
             }
-            console.log(category_bottom)
         } 
         for (var i = 0; i < source.data['category'].length; i++) {
             if (chosen_categories.includes(source.data['category'][i])) {
@@ -168,7 +167,12 @@ def index():
                 } else {
                     source_filtered.data['bottom'][i] = 0.0;
                 }
-                source_filtered.data['top'][i] = source_filtered.data['bottom'][i] + source_filtered.data['NetSpend'][i];
+                source_filtered.data['top'][i] = source_filtered.data['bottom'][i] + Math.abs(source_filtered.data['NetSpend'][i]);
+                if (source_filtered.data['NetSpend'][i] < 0.0) {
+                    source_filtered.data['colour'][i] = '#ffffff';
+                } else {
+                    source_filtered.data['colour'][i] = source.data['colour'][i];
+                }
             } else {
                 source_filtered.data['category'][i] = undefined;
                 source_filtered.data['MonthBegin'][i] = undefined;
@@ -177,7 +181,7 @@ def index():
                 source_filtered.data['right'][i] = undefined;
                 source_filtered.data['bottom'][i] = undefined;
                 source_filtered.data['top'][i] = undefined;
-                source_filtered.data['colour'][i] = source.data['colour'][i];
+                source_filtered.data['colour'][i] = undefined;
             } 
         }
         source_filtered.change.emit();
