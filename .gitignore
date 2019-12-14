@@ -107,6 +107,7 @@ venv.bak/
 
 **/app.db
 **/.DS_Store
+**/tmp
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*

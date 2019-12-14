@@ -4,8 +4,8 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config(object):
 
-    if os.path.exists("tmp/cloudbudget-secrets.json"):
-        with open("tmp/cloudbudget-secrets.json") as f:
+    if os.path.exists("/tmp/cloudbudget-secrets.json"):
+        with open("/tmp/cloudbudget-secrets.json") as f:
             secrets = json.load(f)
             SECRET_KEY = secrets['cloudbudget-secret-key']
             SQLALCHEMY_DATABASE_URI = secrets['connection']
