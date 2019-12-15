@@ -218,8 +218,9 @@ def upload():
     form = UploadForm()
     if form.validate_on_submit():
         f = form.csv_file.data
-        df = pd.read_csv(f, skiprows=1, index_col=False).fillna(0.0)
-        account_holder = f.readline().split(':')[1][:14].strip()
+        account_holder = f.readline().decode()
+        df = pd.read_csv(f, skiprows=0, index_col=False).fillna(0.0)
+        account_holder = account_holder.split(':')[1][:14].strip()
         df['Transaction Date'] = pd.to_datetime(df['Transaction Date'])
         df['Posting Date'] = pd.to_datetime(df['Posting Date'])
         df.columns = [x.lower().replace(' ', '_') for x in df.columns]
@@ -238,7 +239,7 @@ def upload():
             if t_duplicate==None:
                 db.session.add(t)
 
-        db.session.commit()
+        #db.session.commit()
         return redirect(url_for('index'))
 
     return render_template('upload.html', form=form)
