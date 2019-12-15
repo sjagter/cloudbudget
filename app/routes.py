@@ -219,9 +219,11 @@ def upload():
     if form.validate_on_submit():
         f = form.csv_file.data
         df = pd.read_csv(f, skiprows=1, index_col=False).fillna(0.0)
+        account_holder = f.readline().split(':')[1][:14].strip()
         df['Transaction Date'] = pd.to_datetime(df['Transaction Date'])
         df['Posting Date'] = pd.to_datetime(df['Posting Date'])
         df.columns = [x.lower().replace(' ', '_') for x in df.columns]
+        df['account_holder'] = account_holder
 
         for idx, row in df.iterrows():
             t = Transaction(**row.to_dict())
@@ -230,7 +232,8 @@ def upload():
                 description=t.description,
                 debits=t.debits,
                 credits=t.credits,
-                balance=t.balance).first()
+                balance=t.balance,
+                account_holder=t.account_holder).first()
 
             if t_duplicate==None:
                 db.session.add(t)

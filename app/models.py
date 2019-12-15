@@ -27,6 +27,7 @@ class Transaction(db.Model):
     credits = db.Column(db.Float, index=False)
     balance = db.Column(db.Float, index=False)
     category = db.Column(db.String(length=100), index=True)
+    account_holder = db.Column(db.String(length=20), index=False)
 
 class CategoryRule(db.Model):
     id = db.Column(db.Integer, primary_key=True)
