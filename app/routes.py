@@ -239,7 +239,7 @@ def upload():
             if t_duplicate==None:
                 db.session.add(t)
 
-        #db.session.commit()
+        db.session.commit()
         return redirect(url_for('index'))
 
     return render_template('upload.html', form=form)
