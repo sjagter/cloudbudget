@@ -58,7 +58,7 @@ class CategoriseForm(FlaskForm):
     string_match = StringField('(Sub)string Match', validators=[DataRequired()])
     date_match = DateField('Date Match', validators=[Optional()])
     exact_rule = BooleanField('Exact Rule')
-    max_amount = DecimalField('Max Amount')
+    max_amount = DecimalField('Max Amount', validators=[Optional()])
     submit = SubmitField('Create Rule')
 
 class RemoveCategoryForm(FlaskForm):
