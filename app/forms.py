@@ -20,6 +20,7 @@ class CategoriseForm(FlaskForm):
         ('Charity', 'Charity'),
         ('Child Expenses', 'Child Expenses'),
         ('Clothing', 'Clothing'),
+        ('Coffee/Lunch', 'Coffee/Lunch')
         ('Education', 'Education'),
         ('Entertainment', 'Entertainment'),
         ('General Merchandise', 'General Merchandise'),
