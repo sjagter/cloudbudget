@@ -35,6 +35,7 @@ class CategoryRule(db.Model):
     string_match = db.Column(db.String(length=100), index=False)
     date_match = db.Column(db.Date, index=False)
     exact_rule = db.Column(db.Boolean, index=False)
+    max_amount = db.Column(db.Float, index=False)
 
 @login.user_loader
 def load_user(id):

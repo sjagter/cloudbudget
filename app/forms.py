@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, IntegerField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, IntegerField, DecimalField
 from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired, Optional
 
@@ -58,6 +58,7 @@ class CategoriseForm(FlaskForm):
     string_match = StringField('(Sub)string Match', validators=[DataRequired()])
     date_match = DateField('Date Match', validators=[Optional()])
     exact_rule = BooleanField('Exact Rule')
+    max_amount = DecimalField('Max Amount')
     submit = SubmitField('Create Rule')
 
 class RemoveCategoryForm(FlaskForm):

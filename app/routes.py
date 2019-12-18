@@ -55,7 +55,8 @@ def index():
             for rule in cat_rules:
                 rules[cat].append({'str': rule.string_match,
                                    'date': rule.date_match,
-                                   'exact': rule.exact_rule})
+                                   'exact': rule.exact_rule,
+                                   'max_amt': rule.max_amount})
         
         df_transactions = pd.read_sql_query('''
             SELECT 
@@ -66,22 +67,23 @@ def index():
         df_transactions['transaction_date'] = pd.to_datetime(df_transactions['transaction_date'])
         df_transactions['transaction_date'] = df_transactions['transaction_date'].dt.date
 
-        def categorise(name, date, categories):
+        def categorise(name, date, amount, categories):
             for category in categories:
                 for rule in categories[category]:
                     if rule['exact']==True:
-                        if rule['date']==None and rule['str']==name:
-                            return category
-                        if rule['date']==date and rule['str']==name:
-                            return category
+                        if (rule['max_amt']==None) or (amount < rule['max_amt']):
+                            if rule['date']==None and rule['str']==name:
+                                return category
+                            if rule['date']==date and rule['str']==name:
+                                return category
                     else:
-                        if rule['date']==None and rule['str'] in name:
-                            return category
-                        if rule['date']==date and rule['str'] in name:
-                            return category
+                        if (rule['max_amt']==None) or (amount < rule['max_amt']):
+                            if rule['date']==None and rule['str'] in name:
+                                return category
+                            if rule['date']==date and rule['str'] in name:
+                                return category
 
-
-        df_transactions['category'] = df_transactions.apply(lambda x: categorise(x['description'], x['transaction_date'], rules), axis=1)
+        df_transactions['category'] = df_transactions.apply(lambda x: categorise(x['description'], x['transaction_date'], x['debits'], rules), axis=1)
 
         transactions = Transaction.query.all()
         for i, t in enumerate(transactions):
@@ -255,11 +257,13 @@ def add_category_rule():
         string_match = form.string_match.data
         date_match = form.date_match.data
         exact_rule = form.exact_rule.data
+        max_amount = form.max_amount.data
 
         r = CategoryRule(category=category,
                          string_match=string_match,
                          date_match=date_match, 
-                         exact_rule=exact_rule)
+                         exact_rule=exact_rule,
+                         max_amount=max_amount)
         db.session.add(r)
         db.session.commit()
         return redirect(url_for('add_category_rule'))
