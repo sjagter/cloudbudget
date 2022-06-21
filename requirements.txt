@@ -30,7 +30,7 @@ jmespath==0.9.4
 jsonschema==2.6.0
 Mako==1.1.0
 MarkupSafe==1.1.1
-numpy==1.17.4
+numpy==1.22.0
 packaging==19.2
 pandas==0.25.3
 pathspec==0.5.9
